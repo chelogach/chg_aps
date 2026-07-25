@@ -3,7 +3,7 @@
     Toggles APS state (On / Off) and displays status notification
     Author: chelogach & Gemini 3.6 Flash
 */
-params ["_veh", "_player"];
+params ["_veh", ["_player", player]];
 
 if (isNull _veh) exitWith {};
 

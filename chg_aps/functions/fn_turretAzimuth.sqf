@@ -5,8 +5,6 @@
 */
 params ["_veh"];
 
-if (isNull _veh) exitWith { 0 };
-
 private _turretWeapons = _veh weaponsTurret [0];
 private _facing = if (_turretWeapons isEqualTo []) then {
     vectorDir _veh

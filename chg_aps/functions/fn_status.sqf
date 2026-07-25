@@ -3,8 +3,9 @@
     Displays APS status, coverage sector, and remaining charge count
     Author: chelogach & Gemini 3.6 Flash
 */
-params ["_veh", "_player"];
+params ["_veh", ["_player", player]];
 
+if !(hasInterface) exitWith {};
 if (isNull _veh) exitWith {};
 
 private _enabled = _veh getVariable ["chg_aps_enabled", false];
@@ -24,7 +25,7 @@ private _msg = format [
     _chargesRight
 ];
 
-if (!isNull _player) then {
+if (!local _player) then {
     [_msg] remoteExec ["hint", _player];
 } else {
     hint _msg;

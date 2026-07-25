@@ -30,7 +30,7 @@ private _apsToggle = [
     "CHG_APS_Toggle",
     "Toggle APS",
     "",
-    { params ["_target", "_player"]; [_target, _player] call chg_aps_fnc_toggle; },
+    { _this call chg_aps_fnc_toggle; },
     { params ["_target"]; alive _target }
 ] call ace_interact_menu_fnc_createAction;
 
@@ -38,7 +38,7 @@ private _apsStatus = [
     "CHG_APS_Status",
     "APS Status",
     "",
-    { params ["_target", "_player"]; [_target, _player] call chg_aps_fnc_status; },
+    { _this call chg_aps_fnc_status; },
     { params ["_target"]; alive _target }
 ] call ace_interact_menu_fnc_createAction;
 

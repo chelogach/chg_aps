@@ -3,11 +3,14 @@
     Per-frame scanning with turret sector filtering, CPA algorithm, and 60° elevation limit
     Author: chelogach & Gemini 3.6 Flash
 */
-params ["_veh"];
+params [["_veh", objNull]];
 
 if (isNull _veh || {!alive _veh}) exitWith {};
 
-private _nearProjectiles = nearestObjects [_veh, ["RocketCore", "MissileCore", "SubmunitionCore", "ShellCore"], 45];
+private _enabled = _veh getVariable ["chg_aps_enabled", false];
+if (!_enabled) exitWith {};
+
+private _nearProjectiles = nearestObjects [_veh, ["RocketCore", "MissileCore", "SubmunitionCore", "ShellCore"], (_veh getVariable ["chg_aps_scanRange", 45])];
 if (_nearProjectiles isEqualTo []) exitWith {};
 
 private _vehPos = getPosASL _veh;
@@ -17,6 +20,9 @@ private _sector = _veh getVariable ["chg_aps_sector", 360];
 private _halfSector = _sector / 2;
 private _sectorLimited = _halfSector < 180;
 private _turretAz = if (_sectorLimited) then { [_veh] call chg_aps_fnc_turretAzimuth } else { 0 };
+
+private _maxDist = (_veh getVariable ["chg_aps_maxInterceptRange", 30]);
+private _minDist = (_veh getVariable ["chg_aps_minInterceptRange", 6]);
 
 {
     private _proj = _x;
@@ -28,7 +34,7 @@ private _turretAz = if (_sectorLimited) then { [_veh] call chg_aps_fnc_turretAzi
         private _dist = _veh distance _proj;
 
         // Realistic APS interception zone: 6 to 30 meters
-        if (_dist <= 30 && _dist >= 6) then {
+        if (_dist <= _maxDist && _dist >= _minDist) then {
             private _ammoClass = typeOf _proj;
             private _ammoLower = toLower _ammoClass;
 

@@ -20,15 +20,13 @@ if (isClass (configFile >> "CfgPatches" >> "cba_settings")) then {
 
 // Start unified CBA Per-Frame Handler capped at 50 Hz (0.02s)
 [{
-    if (chg_aps_vehicles isEqualTo []) exitWith {};
-
-    // Clear registry of deleted objects
-    if (chg_aps_vehicles findIf { isNull _x } > -1) then {
-        chg_aps_vehicles = chg_aps_vehicles select { !isNull _x };
-    };
-
     {
-        if (local _x && {alive _x}) then {
+        if (!(_x isEqualType objNull) || {{isNull _x} || {!(alive _x)}}) then {
+            chg_aps_vehicles = chg_aps_vehicles - [_x];
+            continue;
+        };
+
+        if (local _x) then {
             private _enabled = _x getVariable ["chg_aps_enabled", false];
             if (_enabled isEqualType true && {_enabled}) then {
                 private _cLeft = _x getVariable ["chg_aps_charges_left", 0];
@@ -40,3 +38,11 @@ if (isClass (configFile >> "CfgPatches" >> "cba_settings")) then {
         };
     } forEach chg_aps_vehicles;
 }, 0.02, []] call CBA_fnc_addPerFrameHandler;
+
+// CBA Events
+["CHG_APS_interceptNotification", {
+    if !(hasInterface) exitWith {};
+    params[["_msg", ""], ["_finalVol", 1.0]];
+    hint format ["%1", _msg];
+    playSoundUI ["chg_aps_intercept_sound", _finalVol, 1.0];
+}] call CBA_fnc_addEventHandler;
