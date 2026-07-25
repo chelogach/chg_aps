@@ -16,12 +16,20 @@ if (isClass (configFile >> "CfgPatches" >> "cba_settings")) then {
         [0.1, 5.0, 1.0, 1],
         false // false = client-side setting (independent of server)
     ] call CBA_fnc_addSetting;
+    [
+        "chg_aps_enabledByDefault",
+        "CHECKBOX",
+        ["APS Enabled by Default", "Whether APS should be enabled by default for new vehicles"],
+        "Chelogach APS",
+        true,
+        1 
+    ] call CBA_fnc_addSetting;
 };
 
 // Start unified CBA Per-Frame Handler capped at 50 Hz (0.02s)
 [{
     {
-        if (!(_x isEqualType objNull) || {{isNull _x} || {!(alive _x)}}) then {
+        if (!(_x isEqualType objNull) || {isNull _x || {!(alive _x)}}) then {
             chg_aps_vehicles = chg_aps_vehicles - [_x];
             continue;
         };

@@ -14,7 +14,8 @@ params [
 if (isNull _veh) exitWith {};
 
 if (isNil {_veh getVariable "chg_aps_enabled"}) then {
-    _veh setVariable ["chg_aps_enabled", false, true];
+    private _enabledDef = missionNamespace getVariable ["chg_aps_enabledByDefault", true];
+    _veh setVariable ["chg_aps_enabled", _enabledDef, true];
 };
 
 if (isNil {_veh getVariable "chg_aps_charges_left"}) then {
