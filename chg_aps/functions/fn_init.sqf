@@ -39,7 +39,7 @@ if !(_veh in chg_aps_vehicles) then {
 };
 
 if (hasInterface) then {
-    if (isClass (configFile >> "CfgPatches" >> "ace_interaction")) then {
+    if (isClass (configFile >> "CfgPatches" >> "ace_main")) then {
         [_veh] call chg_aps_fnc_createAceMenu;
     } else {
         if !(_veh getVariable ["chg_aps_actionsAdded", false]) then {

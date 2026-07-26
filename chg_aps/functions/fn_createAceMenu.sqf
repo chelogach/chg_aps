@@ -7,7 +7,9 @@ params [["_veh", objNull, [objNull]]];
 
 if (isNull _veh) exitWith {};
 
-if (!isClass (configFile >> "CfgPatches" >> "ace_interaction")) exitWith {};
+if (!isClass (configFile >> "CfgPatches" >> "ace_main")) exitWith {};
+
+if (_veh getVariable ["chg_aps_aceActionsAdded", false]) exitWith {};
 
 if (isNil "ace_interact_menu_fnc_createAction") exitWith {
     // Delay execution until ACE3 is fully loaded on client
@@ -17,6 +19,8 @@ if (isNil "ace_interact_menu_fnc_createAction") exitWith {
         [_v] call chg_aps_fnc_createAceMenu;
     };
 };
+
+_veh setVariable ["chg_aps_aceActionsAdded", true];
 
 private _apsMenu = [
     "CHG_APS_Menu",
