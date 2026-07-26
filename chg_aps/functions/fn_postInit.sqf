@@ -28,29 +28,38 @@ if (isClass (configFile >> "CfgPatches" >> "cba_settings")) then {
 
 // Start unified CBA Per-Frame Handler capped at 50 Hz (0.02s)
 [{
-    {
-        if (!(_x isEqualType objNull) || {isNull _x || {!(alive _x)}}) then {
-            chg_aps_vehicles = chg_aps_vehicles - [_x];
+    for "_i" from (count chg_aps_vehicles - 1) to 0 step -1 do {
+        private _veh = chg_aps_vehicles select _i;
+        if (!(_veh isEqualType objNull) || {isNull _veh || {!(alive _veh)}}) then {
+            chg_aps_vehicles deleteAt _i;
             continue;
         };
 
-        if (local _x) then {
-            private _enabled = _x getVariable ["chg_aps_enabled", false];
+        if (local _veh) then {
+            private _enabled = _veh getVariable ["chg_aps_enabled", false];
             if (_enabled isEqualType true && {_enabled}) then {
-                private _cLeft = _x getVariable ["chg_aps_charges_left", 0];
-                private _cRight = _x getVariable ["chg_aps_charges_right", 0];
+                private _cLeft = _veh getVariable ["chg_aps_charges_left", 0];
+                private _cRight = _veh getVariable ["chg_aps_charges_right", 0];
                 if (_cLeft > 0 || _cRight > 0) then {
-                    [_x] call chg_aps_fnc_scanArea;
+                    [_veh] call chg_aps_fnc_scanArea;
                 };
             };
         };
-    } forEach chg_aps_vehicles;
+    };
 }, 0.02, []] call CBA_fnc_addPerFrameHandler;
 
 // CBA Events
 ["CHG_APS_interceptNotification", {
     if !(hasInterface) exitWith {};
-    params[["_msg", ""], ["_finalVol", 1.0]];
-    hint format ["%1", _msg];
+    params [["_isLeft", true, [true]]];
+    
+    private _sideStr = if (_isLeft) then {"LEFT"} else {"RIGHT"};
+    private _msg = format ["APS System: Target Intercepted (%1)!", _sideStr];
+    
+    private _volMult = missionNamespace getVariable ["chg_aps_soundVolume", 1.0];
+    if !(_volMult isEqualType 0) then { _volMult = 1.0; };
+    private _finalVol = 5.0 * _volMult;
+
+    hint _msg;
     playSoundUI ["chg_aps_intercept_sound", _finalVol, 1.0];
 }] call CBA_fnc_addEventHandler;

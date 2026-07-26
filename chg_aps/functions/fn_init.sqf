@@ -13,21 +13,23 @@ params [
 
 if (isNull _veh) exitWith {};
 
+private _shouldSync = isServer || {local _veh};
+
 if (isNil {_veh getVariable "chg_aps_enabled"}) then {
     private _enabledDef = missionNamespace getVariable ["chg_aps_enabledByDefault", true];
-    _veh setVariable ["chg_aps_enabled", _enabledDef, true];
+    _veh setVariable ["chg_aps_enabled", _enabledDef, _shouldSync];
 };
 
 if (isNil {_veh getVariable "chg_aps_charges_left"}) then {
-    _veh setVariable ["chg_aps_charges_left", _chargesLeft, true];
+    _veh setVariable ["chg_aps_charges_left", _chargesLeft, _shouldSync];
 };
 
 if (isNil {_veh getVariable "chg_aps_charges_right"}) then {
-    _veh setVariable ["chg_aps_charges_right", _chargesRight, true];
+    _veh setVariable ["chg_aps_charges_right", _chargesRight, _shouldSync];
 };
 
 if (isNil {_veh getVariable "chg_aps_sector"}) then {
-    _veh setVariable ["chg_aps_sector", _sector, true];
+    _veh setVariable ["chg_aps_sector", _sector, _shouldSync];
 };
 
 if (isNil "chg_aps_vehicles") then {

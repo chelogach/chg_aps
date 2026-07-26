@@ -25,8 +25,4 @@ private _msg = format [
     _chargesRight
 ];
 
-if (!local _player) then {
-    [_msg] remoteExec ["hint", _player];
-} else {
-    hint _msg;
-};
+hint _msg;

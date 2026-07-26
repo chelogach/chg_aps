@@ -46,23 +46,13 @@ if (_canIntercept) then {
         deleteVehicle _p;
         if (!isNull _proj) then {
             deleteVehicle _proj;
-            if (!isNull _proj) then {
-                [_proj] remoteExec ["deleteVehicle", _proj];
-            };
         };
     };
 
-    // Crew notification (hint popup + customizable 2D sound respecting CBA Settings)
-    private _sideStr = if (_isLeft) then {"LEFT"} else {"RIGHT"};
-    private _msg = format ["APS System: Target Intercepted (%1)!", _sideStr];
-
-    // Calculate final volume based on user setting chg_aps_soundVolume (from 1.0 to 5.0x)
-    private _volMult = missionNamespace getVariable ["chg_aps_soundVolume", 1.0];
-    private _finalVol = 5.0 * _volMult;
-
+    // Crew notification (hint popup + customizable 2D sound respecting local client CBA Settings)
     {
         if (isPlayer _x) then {
-            ["CHG_APS_interceptNotification", [_msg, _finalVol], _x] call CBA_fnc_targetEvent;
+            ["CHG_APS_interceptNotification", [_isLeft], _x] call CBA_fnc_targetEvent;
         };
     } forEach (crew _veh);
 };
